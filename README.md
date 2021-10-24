@@ -48,6 +48,11 @@ Com base no seu projeto, o Jest fará algumas perguntas e irá criar um arquivo 
 
 ? Automatically clear mock calls and instances between every test? › (y/N) Y
 
+<h1 align="center">
+    <img src="./img/img001.png" />
+</h1>
+
+
 ### 3.3 - Instalar dependencia de desenvolvimento:
 `yarn add ts-jest -D`
 
@@ -104,7 +109,10 @@ Eu espero que minha soma seja o resultado 4
 E roda o exemplo:
 `yarn test`
 
-img002
+<h1 align="center">
+    <img src="./img/img002.png" />
+</h1>
+
 
 Ex 2:
 ```
@@ -130,7 +138,10 @@ Agora o teste esta negando que o resultado seja 5
 E roda o exemplo:
 `yarn test`
 
-img003
+<h1 align="center">
+    <img src="./img/img003.png" />
+</h1>
+
 
 ## Teste de criação de categoria
 
