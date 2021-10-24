@@ -38,13 +38,13 @@ Com base no seu projeto, o Jest fará algumas perguntas e irá criar um arquivo 
 
 ? Choose the test environment that will be used for testing › - Use arrow-keys. Return to submit.
 ❯   node       -> Enter
-    jsdom (browser-like)
+
 
 ? Do you want Jest to add coverage reports? › (y/N) N
 
 ? Which provider should be used to instrument code for coverage? › - Use arrow-keys. Return to submit.
 ❯   v8         -> Enter
-    babel
+
 
 ? Automatically clear mock calls and instances between every test? › (y/N) Y
 
@@ -144,4 +144,34 @@ E roda o exemplo:
 
 
 ## Teste de criação de categoria
+
+Dentro de src/modules/cars/repositories 
+Vamos criar uma nova pasta pra colocar os repositorios fakes, chamada:
+in-memory
+  E dentro de in-memory um arquivo: CategoriesRepositoryInMemory.ts
+
+Para fazer a implementação: Ctrl + .
+
+<h1 align="center">
+    <img src="./img/img004.png" />
+</h1>
+
+Continua a implematção dentro do CreateCategoryUseCase.spec.ts
+
+```Should be able to create a new category```
+<h1 align="center">
+    <img src="./img/img005.png" />
+</h1>
+
+```Should not be able to create a new category with name exists```
+<h1 align="center">
+    <img src="./img/img006.png" />
+</h1>
+
+E roda o teste de criação de categoria:
+`yarn test`
+
+<h1 align="center">
+    <img src="./img/img007.png" />
+</h1>
 
