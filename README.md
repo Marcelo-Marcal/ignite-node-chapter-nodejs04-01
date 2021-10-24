@@ -2,9 +2,9 @@
 
 Chapter IV - Testes e regras de negócio
 
-# Introdução
+## 1. Introdução
 
-# Conhecendo os tipos de testes
+## 2. Conhecendo os tipos de testes
 
 1 - Teste unitários
 
@@ -19,5 +19,118 @@ TDD - Test Driven Development
 Inicia fazendo os teste e depois criando toda o resto da aplicação.
 
 
-# Criando o primeiro teste
+## 3. Criando o primeiro teste
+
+Biblioteca utilizada nos teste:
+https://jestjs.io/pt-BR/docs/getting-started
+
+### 3.1 - Instalar como dependencia de desenvolvimento:
+`yarn add jest @types/jest -D`
+
+### 3.2 - Configuração adicional:
+Gerando um arquivo de configuração básico.
+Com base no seu projeto, o Jest fará algumas perguntas e irá criar um arquivo básico de configuração com uma breve descrição para cada opção:
+`yarn jest --init`
+
+? Would you like to use Jest when running "test" script in "package.json"? › (Y/n) Y
+
+? Would you like to use Typescript for the configuration file? › (y/N) Y
+
+? Choose the test environment that will be used for testing › - Use arrow-keys. Return to submit.
+❯   node       -> Enter
+    jsdom (browser-like)
+
+? Do you want Jest to add coverage reports? › (y/N) N
+
+? Which provider should be used to instrument code for coverage? › - Use arrow-keys. Return to submit.
+❯   v8         -> Enter
+    babel
+
+? Automatically clear mock calls and instances between every test? › (y/N) Y
+
+### 3.3 - Instalar dependencia de desenvolvimento:
+`yarn add ts-jest -D`
+
+Agora dentro do arquivo jest.config.ts vamos fazer a segui alteração:
+Descomentar:
+preset: undefined,
+
+E trocar ela para:
+preset: "ts-jest",
+
+E apontar o mapeamento das crasses para fazer o testes:
+Descomentar:
+```
+testMatch: [
+    "**/__tests__/**/*.[jt]s?(x)",
+    "**/?(*.)+(spec|test).[tj]s?(x)"
+  ],
+```
+
+E Mudar para:
+```
+testMatch: ["**/*.spec.ts"],
+```
+
+Para que ele pare apos o primeiro error.
+Descomentar:
+```
+bail: 0,
+```
+
+E Mudar para:
+```
+bail: true,
+```
+
+Criar o primeiro teste:
+1 - Criar dentro de src/modules/cars/useCases um arquivo:
+  CreateCategoryUseCase.spec.ts
+
+Ex 1:
+```
+describe("Criar categoria", () => {
+  it("Espero que 2 + 2 seja 4", () => {
+    const soma = 2 + 2;
+    const resultado = 4;
+
+    
+    expect(soma).toBe(resultado);
+  });
+});
+```
+Eu espero que minha soma seja o resultado 4
+
+E roda o exemplo:
+`yarn test`
+
+img002
+
+Ex 2:
+```
+describe("Criar categoria", () => {
+  it("Espero que 2 + 2 seja 4", () => {
+    const soma = 2 + 2;
+    const resultado = 4;
+
+    
+    expect(soma).toBe(resultado);
+  });
+
+  it("Espero que 2 + 2 não seja 5", () => {
+    const soma = 2 + 2;
+    const resultado = 5;
+
+    expect(soma).not.toBe(resultado);
+  });
+});
+```
+Agora o teste esta negando que o resultado seja 5
+
+E roda o exemplo:
+`yarn test`
+
+img003
+
+## Teste de criação de categoria
 
