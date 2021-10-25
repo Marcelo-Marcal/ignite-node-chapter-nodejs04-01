@@ -143,7 +143,7 @@ E roda o exemplo:
 </h1>
 
 
-## Teste de criação de categoria
+## 4. Teste de criação de categoria
 
 Dentro de src/modules/cars/repositories 
 Vamos criar uma nova pasta pra colocar os repositorios fakes, chamada:
@@ -174,4 +174,13 @@ E roda o teste de criação de categoria:
 <h1 align="center">
     <img src="./img/img007.png" />
 </h1>
+
+## 5. Teste de autenticação do usuário
+
+Criar um arquivo em src/modules/account/useCases/authenticateUser/AuthenticateUserUseCase.spec.ts
+
+
+Criar os metodos de repositorios:
+Criar um arquivo em src/modules/account/repositories/in-memory/UsersRepositoryInMemory.ts
+
 
