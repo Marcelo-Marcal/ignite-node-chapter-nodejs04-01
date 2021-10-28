@@ -177,10 +177,71 @@ E roda o teste de criação de categoria:
 
 ## 5. Teste de autenticação do usuário
 
-Criar um arquivo em src/modules/account/useCases/authenticateUser/AuthenticateUserUseCase.spec.ts
+5.1 - Criar os metodos de repositorios:
+  Criar um arquivo em:
+    src/modules/account/repositories/in-memory/UsersRepositoryInMemory.ts
+
+```OBS: ( Ctrl + . ) Vai instacia```
+
+<h1 align="center">
+    <img src="./img/img008.png" />
+</h1>
+
+5.2 - Criar um arquivo em:
+  src/modules/account/useCases/authenticateUser/AuthenticateUserUseCase.spec.ts
 
 
-Criar os metodos de repositorios:
-Criar um arquivo em src/modules/account/repositories/in-memory/UsersRepositoryInMemory.ts
+5.3 - Criar um usuario e altencicar:
+should be able to authenticate an user
 
+
+
+Se quiser saber oque o result esta trazendo e so usar um:
+  console.log(result);
+
+`yarn test`
+
+<h1 align="center">
+    <img src="./img/img009.png" />
+</h1>
+
+Agora podemos colocar o codigo:
+  expect(result).toHaveProperty("token");
+
+Dizendo que o resultado tenha uma propriedade token
+
+`yarn test`
+
+<h1 align="center">
+    <img src="./img/img010.png" />
+</h1>
+
+5.4 - Usuario que não existe:
+should not be able to authenticate an nonexistent user
+
+<h1 align="center">
+    <img src="./img/img011.png" />
+</h1>
+
+`yarn test`
+
+<h1 align="center">
+    <img src="./img/img012.png" />
+</h1>
+
+5.5 - Não autenticar com senha incorreta
+should not be able to authenticate with incorrect password
+
+<h1 align="center">
+    <img src="./img/img013.png" />
+</h1>
+
+`yarn test`
+
+<h1 align="center">
+    <img src="./img/img014.png" />
+</h1>
+
+
+## 6. Imports da aplicação
 
