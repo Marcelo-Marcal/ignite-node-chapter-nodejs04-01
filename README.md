@@ -245,3 +245,9 @@ should not be able to authenticate with incorrect password
 
 ## 6. Imports da aplicação
 
+Reload Visual Studio Code Window:
+
+```Ctrl + Shift + P```
+
+Reload Window
+
