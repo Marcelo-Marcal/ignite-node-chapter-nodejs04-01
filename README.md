@@ -1,253 +1,375 @@
-# ignite-node-chapter-nodejs04-01
+# ignite-node-chapter-nodejs03-01
+### Chapter III
 
-Chapter IV - Testes e regras de negócio
+## 1 Conhecendo o Docker:
+### Criando nosso primeiro container e Dockerfile
+  crisção do Dockerfile
+img 01
 
-## 1. Introdução
+  criação do .dockerignore
+img 02
 
-## 2. Conhecendo os tipos de testes
+Rodar: para criar uma imagem
+docker build -t rentx .
 
-1 - Teste unitários
+Rodar: rodar o docker
+docker run -p 3333:3333 rentx
+img 03
 
-2 - Teste de Integração
--> routes -> controllers -> useCases -> repository
+Caso querira acessa o conteine criado
+docker ps
 
-<- repository <- useCases <- controllers <- routes
+docker exec -it NOME DO CONTEINE /bin/bash
 
-- ` Metodologia:`
-TDD - Test Driven Development
+img 04
 
-Inicia fazendo os teste e depois criando toda o resto da aplicação.
+E queira ver se as informações estão ok
 
+ls
 
-## 3. Criando o primeiro teste
+### Usando docker-compose
 
-Biblioteca utilizada nos teste:
-https://jestjs.io/pt-BR/docs/getting-started
+Criação de um arquivo chamado:
+  docker-compose.yml
 
-### 3.1 - Instalar como dependencia de desenvolvimento:
-`yarn add jest @types/jest -D`
-
-### 3.2 - Configuração adicional:
-Gerando um arquivo de configuração básico.
-Com base no seu projeto, o Jest fará algumas perguntas e irá criar um arquivo básico de configuração com uma breve descrição para cada opção:
-`yarn jest --init`
-
-? Would you like to use Jest when running "test" script in "package.json"? › (Y/n) Y
-
-? Would you like to use Typescript for the configuration file? › (y/N) Y
-
-? Choose the test environment that will be used for testing › - Use arrow-keys. Return to submit.
-❯   node       -> Enter
+Instalação do docker compose
+  https://www.notion.so/Docker-e-Docker-Compose-16771f2ceefe4a05a8c29df4ca49e97a
 
 
-? Do you want Jest to add coverage reports? › (y/N) N
+Execultar o docker compose:
+docker-compose up
 
-? Which provider should be used to instrument code for coverage? › - Use arrow-keys. Return to submit.
-❯   v8         -> Enter
+OBS: Se o conteine ja estive rodando vamos para ele e reover para criar um novo
+
+docker ps
+docker stop E ONUMERO DO CONTEINE
+docker rm E ONUMERO DO CONTEINE
+
+docker-compose up
+
+Para execulta o docker e ele fique rodando mesmo que feche o terminal.
+Continua rodando em Background
+
+docker-compose up -d
+
+### Comandos do docker
+
+Ver todos o conteines de pé:
+  docker ps
+
+ver todos o conteine ate os que estão parados:
+  docker ps -a
+
+Remover o conteneiner, antes de fazer a remoção ele precisa ser parado:
+  docker rm ONUMERO DO CONTEINE
+
+Reinicia o conteiner:
+  docker start ONUMERO DO CONTEINE
+
+Para um conteiner:
+  docker stop E ONUMERO DO CONTEINE
+
+Para o serviço:
+  docker-compose stop
+
+Remover tudo o que tem no conteine:
+  docker-compose down
+
+Acessa uma maquina
+  docker exec -it NOME DO CONTEINER /bin/bash
+
+Ver os logs que estão passando na aplicação:
+  docker logs NOME DA APLICAÇÂO
+
+E pra observa o logs
+  docker logs -f
+
+## 2 Trabalhando com Banco de Dados
+
+### Conhecendo as formas de usar o banco de dados
+
+MODEL <-> ORM <-> BANCO DE DADOS
+
+O ORM, ira pega o codigo e transforma em uma forma que o banco de dados entenda.
+
+### Instalando o TypeORM
+https://typeorm.io/#/
+  
+01 - Install the npm package:
+yarn add typeorm
+
+02 - You need to install reflect-metadata shim:
+yarn add typeorm reflect-metadata
+
+Pode ser ignorado o passo tres da instalação.
+
+04 - Install a database driver: Escolher banco de dados.
+  for PostgreSQL or CockroachDB
+
+yarn add pg
+
+Configurações no projeto no arquivo tsconfig.json:
+Abilitar:
+  "emitDecoratorMetadata": true,
+  "experimentalDecorators": true,
+
+### Criando container do postgres
+
+img05
+
+docker-compose up --force-recreate
+
+Verificar o IP do conteiner:
+
+docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' rentx
+Ou
+docker exec database_ignite cat /etc/hosts
+docker exec rentx cat /etc/hosts
+
+Arrumando erro de comunicação:
+img06
+docker-compose down
+docker-compose up -d
+docker logs rentx -f
+img07
+
+Abrir o Beekeeper-Studio: para trabalhar com banco de dados.
+img08
+Selecionar o tipo: Postgres
+Usuario: docker
+Senha: ignite
+Default Database: rentx
+
+Se der um test ele ira mostra se ja esta conectado
+img09
+
+Ai e so dar um Connect
+
+img010
+
+- Refatoração com network_mode e reload
+Refatoração Docker com TypeORM
+https://www.notion.so/Refatora-o-Docker-com-TypeORM-4500fc0d075349ac9b97d670e734d41b
+
+### Aprendendo o conceito de migrations
+
+Criação das tabelas e colunas no banco de dados
+Poderia ser criado a mão direto no Beekeeper com comandos como por exemplo:
+img011
+
+### Criando migration de categoria
+
+Criar um scripts no arquivo package.json:
+"typeorm": "ts-node-dev ./node_modules/typeorm/cli"
+
+yarn typeorm
+
+E mais uma alteração dentro do ormconfig.json:
+definido a pasta onde estara nosso projeto. e para isso vamos criar uma pasta dentro de database, com o nome de migrations.
+E dentro do ormconfig.json:
+Criar:
+img012
+
+Criação da migration:
+yarn typeorm migration:create -n CreateCategories
+
+img014
+
+img015
+
+yarn typeorm migration:run
+
+img016
+
+Pra ver se esta tudo certo e so ir ao Beekeeper
+
+Para desfazer pra arrumar:
+
+yarn typeorm migration:revert
 
 
-? Automatically clear mock calls and instances between every test? › (y/N) Y
+### Refatorando o model de categoria
 
-<h1 align="center">
-    <img src="./img/img001.png" />
-</h1>
+Altera o nome da pasta model para entities
+img018
 
+### Alterando o Repositório de categoria
 
-### 3.3 - Instalar dependencia de desenvolvimento:
-`yarn add ts-jest -D`
+docker-compose start
 
-Agora dentro do arquivo jest.config.ts vamos fazer a segui alteração:
-Descomentar:
-preset: undefined,
+docker ps
 
-E trocar ela para:
-preset: "ts-jest",
+### Refatorando o caso de uso de categoria
 
-E apontar o mapeamento das crasses para fazer o testes:
-Descomentar:
+### Entendendo as alterações
+
+Reiniciar os serviços que não estão de pé:
+docker-compose start
+
+## 3 Injeção de dependência
+
+### Conhecendo TSyringe
+Funciona como um facilitador de dependencia
+
+yarn add tsyringe
+
+Agora vamos fazer as injeções do UseCase
+
+Criar uma pasta no src, chamada: shared
+E dentro da pasta shared, criar outra pasta: container
+E dentro da pasta: container criar um arquivo: index.ts
+
+img019
+
+### Refatorando as especificações
+
+### Criando migration de especificação
+
+Criação da migration:
+yarn typeorm migration:create -n CreateSpecifications
+
+Rodar a migration:
+yarn typeorm migration:run
+
+### Continuação da documentação
+
+Vamos entra no no arquivo: swagger.json:
+http://localhost:3333/api-docs/
+
+Criação da documentação de importe e specificação
+img020
+
+Criação de aplicação para arquivo csv:
+"multipart/form-data": { }
+
 ```
-testMatch: [
-    "**/__tests__/**/*.[jt]s?(x)",
-    "**/?(*.)+(spec|test).[tj]s?(x)"
-  ],
+"multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
 ```
+img021
 
-E Mudar para:
-```
-testMatch: ["**/*.spec.ts"],
-```
+## 4 Usuário
 
-Para que ele pare apos o primeiro error.
-Descomentar:
-```
-bail: 0,
-```
+### Criando migration de usuário
 
-E Mudar para:
-```
-bail: true,
-```
+Criação da migration com a tabela de Usuario:
+yarn typeorm migration:create -n CreateUsers
 
-Criar o primeiro teste:
-1 - Criar dentro de src/modules/cars/useCases um arquivo:
-  CreateCategoryUseCase.spec.ts
+img022
 
-Ex 1:
-```
-describe("Criar categoria", () => {
-  it("Espero que 2 + 2 seja 4", () => {
-    const soma = 2 + 2;
-    const resultado = 4;
+Rodar a migration:
+yarn typeorm migration:run
 
-    
-    expect(soma).toBe(resultado);
-  });
-});
-```
-Eu espero que minha soma seja o resultado 4
+Criar a entidade de Usuario:
+E criar um modulo, na pasta modules outra pasta chamado: accounts.
+E dentro da pasta chamada accounts, outra pasta chamada: entities.
+E dentro da pasta entities, um arquivo chamado: User.ts
 
-E roda o exemplo:
-`yarn test`
+### Criando repositório de usuário
 
-<h1 align="center">
-    <img src="./img/img002.png" />
-</h1>
+Criar a dentro de accounts uma pasta repositories
+E criar a interface dentro da mesma pasta
+
+IUsersRepository.ts
+
+### Criando controller de usuário
+
+### Alterar tabela de usuário
+
+Criação da migration com a tabela de Aterar  e deletar Usuario:
+yarn typeorm migration:create -n AlterUserDeleteUsername
 
 
-Ex 2:
-```
-describe("Criar categoria", () => {
-  it("Espero que 2 + 2 seja 4", () => {
-    const soma = 2 + 2;
-    const resultado = 4;
+Rodar a migration:
+yarn typeorm migration:run
 
-    
-    expect(soma).toBe(resultado);
-  });
+### Criptografrar senha
+Instalar a biblioteca:
+yarn add bcrypt
 
-  it("Espero que 2 + 2 não seja 5", () => {
-    const soma = 2 + 2;
-    const resultado = 5;
+Instalar as tipagens:
+yarn add @types/bcrypt -D
 
-    expect(soma).not.toBe(resultado);
-  });
-});
-```
-Agora o teste esta negando que o resultado seja 5
+Verificação para ver se já existe um usuario com esse email.
+Que ira busca dentro do usersRepository
+img023
 
-E roda o exemplo:
-`yarn test`
+### Entendendo autenticação com JWT
+Vai gerar um token
 
-<h1 align="center">
-    <img src="./img/img003.png" />
-</h1>
+### Criando token do usuário
+Instalar a biblioteca:
+yarn add jsonwebtoken
 
+Instalar as tipagens:
+yarn add @types/jsonwebtoken -D
 
-## 4. Teste de criação de categoria
+https://www.md5hashgenerator.com/
 
-Dentro de src/modules/cars/repositories 
-Vamos criar uma nova pasta pra colocar os repositorios fakes, chamada:
-in-memory
-  E dentro de in-memory um arquivo: CategoriesRepositoryInMemory.ts
+Teste no insomnia:
+img024
 
-Para fazer a implementação: Ctrl + .
+E para trazer somente o nome e email:
+img025
 
-<h1 align="center">
-    <img src="./img/img004.png" />
-</h1>
+img026
 
-Continua a implematção dentro do CreateCategoryUseCase.spec.ts
+### Autenticação nas rotas
 
-```Should be able to create a new category```
-<h1 align="center">
-    <img src="./img/img005.png" />
-</h1>
+### Tratamento de exceções
 
-```Should not be able to create a new category with name exists```
-<h1 align="center">
-    <img src="./img/img006.png" />
-</h1>
+Instalar a biblioteca:
+yarn add express-async-errors
 
-E roda o teste de criação de categoria:
-`yarn test`
+Log
+docker logs rentx -f
 
-<h1 align="center">
-    <img src="./img/img007.png" />
-</h1>
+## Avatar de Usuário
+### Adicionando coluna de avatar
 
-## 5. Teste de autenticação do usuário
+criar uma pasta updateUserAvatar
+E criar um arquivo dentro dela: UpdateUserAvatarUseCase.ts
 
-5.1 - Criar os metodos de repositorios:
-  Criar um arquivo em:
-    src/modules/account/repositories/in-memory/UsersRepositoryInMemory.ts
+- Adicionar coluna avatar na tabela de users
+  Criação da migration com a tabela de Aterar  e deletar Usuario:
+  yarn typeorm migration:create -n AlterUserAddAvatar
 
-```OBS: ( Ctrl + . ) Vai instacia```
+  Rodar a migration:
+  yarn typeorm migration:run
 
-<h1 align="center">
-    <img src="./img/img008.png" />
-</h1>
+- Refatotora usuario com coluna avatar: entities/User.ts
+  @Column()
+  avatar: string;
 
-5.2 - Criar um arquivo em:
-  src/modules/account/useCases/authenticateUser/AuthenticateUserUseCase.spec.ts
+- Configuração upload no multer
 
+- Criar a regra de negocio do upload
 
-5.3 - Criar um usuario e altencicar:
-should be able to authenticate an user
+- Criar controller
+  
+Crias uma pasta dentro do src/ @type
+Destro dela outra pasta @type/ express
+Destro dela outra pasta express/ index.d.ts
 
+### Upload de avatar
+```Deleta manualmente no banco de dados:```
+` DELETE FROM USERS WHERE ID = 'c3b63a2a-1ea0-4339-bd18-f9ca03cd7f51' `
 
+### Remover arquivo de avatar existente
 
-Se quiser saber oque o result esta trazendo e so usar um:
-  console.log(result);
+Crias uma pasta dentro do src/ utils
+Destro dela outra pasta utils/ file.ts
 
-`yarn test`
+Ateração dentro de UpdateUserAvatarUseCase.ts
+img027
 
-<h1 align="center">
-    <img src="./img/img009.png" />
-</h1>
-
-Agora podemos colocar o codigo:
-  expect(result).toHaveProperty("token");
-
-Dizendo que o resultado tenha uma propriedade token
-
-`yarn test`
-
-<h1 align="center">
-    <img src="./img/img010.png" />
-</h1>
-
-5.4 - Usuario que não existe:
-should not be able to authenticate an nonexistent user
-
-<h1 align="center">
-    <img src="./img/img011.png" />
-</h1>
-
-`yarn test`
-
-<h1 align="center">
-    <img src="./img/img012.png" />
-</h1>
-
-5.5 - Não autenticar com senha incorreta
-should not be able to authenticate with incorrect password
-
-<h1 align="center">
-    <img src="./img/img013.png" />
-</h1>
-
-`yarn test`
-
-<h1 align="center">
-    <img src="./img/img014.png" />
-</h1>
-
-
-## 6. Imports da aplicação
-
-Reload Visual Studio Code Window:
-
-```Ctrl + Shift + P```
-
-Reload Window
-
+Fim
